@@ -5,7 +5,7 @@ In the previous assignment, you built a database-backed chatroom with [Node][nod
   [socket.io]: http://socket.io
 
 ## The Problem
-You've attained critical acclaim for your work on the original chatroom server, but your users are starting to get antsy. They've noticed that their messages take a long time to show up, and there a few features that they feel like they're missing. It's time to take the chatroom into the 21st century with some real-time goodness.
+You've garnered critical acclaim for your work on the original chatroom server, but your users are starting to get antsy. They've noticed that their messages take a long time to show up, and there are a few features that they feel like they're missing. It's time to take the chatroom into the 21st century with some real-time goodness.
 
 ## Requirements
 Starting with your existing chatroom as a template, build a real-time chatroom that does not have to poll the server for new messages. Remove any existing refresh/Ajax update logic that you have in your chatroom -- it will no longer be necessary. Messages will now be delivered to your client via events fired by [socket.io][socket.io].
@@ -49,16 +49,19 @@ Then, on each page of your site that needs to communicate with the server in rea
     // the rest of your client-side scripting here...
     </script>
 
-**Note** that this is automatically served by socket.io, you don't need to copy this script file anywhere.
+**Note** that `/socket.io/socket.io.js` is automatically served by socket.io, you don't need to copy this script file anywhere.
 
 ## Using socket.io
 Socket.io works like a normal `EventEmitter` in Node, except that it can emit events back and forth between a client and a server. Come up with a reasonable set of events, and then emit them from either the client or the server to indicate state changes.
 
 One possible set of events could be:
 
+##### Sent Client-to-Server
 * `join(roomName, nickname)`: sent from the client when joining a new room
 * `nickname(nickname)`: sent from the client when the nickname changes after initial join
 * `message(message)`: sent from the client when a new message is sent
+
+##### Sent Server-to-Client
 * `message(nickname, message, time)`: sent from the server when a new message for the room is received
 * `membershipChanged(members)`: sent from the server when a user joins, leaves, or changes their nickname (the `members` parameter should be a complete list of users)
 

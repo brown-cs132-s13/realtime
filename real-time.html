@@ -145,7 +145,7 @@ pre .tex .formula {
 
 <h2 id="theproblem">The Problem</h2>
 
-<p>You&#8217;ve attained critical acclaim for your work on the original chatroom server, but your users are starting to get antsy. They&#8217;ve noticed that their messages take a long time to show up, and there a few features that they feel like they&#8217;re missing. It&#8217;s time to take the chatroom into the 21st century with some real-time goodness.</p>
+<p>You&#8217;ve garnered critical acclaim for your work on the original chatroom server, but your users are starting to get antsy. They&#8217;ve noticed that their messages take a long time to show up, and there are a few features that they feel like they&#8217;re missing. It&#8217;s time to take the chatroom into the 21st century with some real-time goodness.</p>
 
 <h2 id="requirements">Requirements</h2>
 
@@ -192,7 +192,7 @@ var socket = io.connect();
 &lt;/script&gt;
 </code></pre>
 
-<p><strong>Note</strong> that this is automatically served by socket.io, you don&#8217;t need to copy this script file anywhere.</p>
+<p><strong>Note</strong> that <code>/socket.io/socket.io.js</code> is automatically served by socket.io, you don&#8217;t need to copy this script file anywhere.</p>
 
 <h2 id="usingsocket.io">Using socket.io</h2>
 
@@ -200,10 +200,17 @@ var socket = io.connect();
 
 <p>One possible set of events could be:</p>
 
+<h5 id="sentclient-to-server">Sent Client-to-Server</h5>
+
 <ul>
 <li><code>join(roomName, nickname)</code>: sent from the client when joining a new room</li>
 <li><code>nickname(nickname)</code>: sent from the client when the nickname changes after initial join</li>
 <li><code>message(message)</code>: sent from the client when a new message is sent</li>
+</ul>
+
+<h5 id="sentserver-to-client">Sent Server-to-Client</h5>
+
+<ul>
 <li><code>message(nickname, message, time)</code>: sent from the server when a new message for the room is received</li>
 <li><code>membershipChanged(members)</code>: sent from the server when a user joins, leaves, or changes their nickname (the <code>members</code> parameter should be a complete list of users)</li>
 </ul>
