@@ -8,7 +8,7 @@ In the previous assignment, you built a database-backed chatroom with [Node][nod
 You've garnered critical acclaim for your work on the original chatroom server, but your users are starting to get antsy. They've noticed that their messages take a long time to show up, and there are a few features that they feel like they're missing. It's time to take the chatroom into the 21st century with some real-time goodness.
 
 ## Requirements
-Starting with your existing chatroom as a template, build a real-time chatroom that does not have to poll the server for new messages. Remove any existing refresh/Ajax update logic that you have in your chatroom -- it will no longer be necessary. Messages will now be delivered to your client via events fired by [socket.io][socket.io].
+Starting with your existing chatroom as a template, build a real-time chatroom that does not have to poll the server for new messages. Remove any existing refresh/AJAX update logic that you have in your chatroom -- it will no longer be necessary. Messages will now be delivered to your client via events fired by [socket.io][socket.io].
 
 Your new chatroom product should also show, for each room, a list of the users currently in that room. The users should be removed from the list when they close their browser window.
 
@@ -52,7 +52,7 @@ Then, on each page of your site that needs to communicate with the server in rea
 **Note** that `/socket.io/socket.io.js` is automatically served by socket.io, you don't need to copy this script file anywhere.
 
 ## Using socket.io
-Socket.io works like a normal `EventEmitter` in Node, except that it can emit events back and forth between a client and a server. Come up with a reasonable set of events, and then emit them from either the client or the server to indicate state changes.
+Socket.io functions as an `EventEmitter`, which means you attach `.on()` handlers. The events are transported back and forth between a client and a server. Come up with a reasonable set of events, and then emit them from either the client or the server to indicate state changes.
 
 One possible set of events could be:
 
@@ -70,7 +70,7 @@ One possible set of events could be:
 To send an event from server to client, you first obtain an individual socket object, or a collection of socket objects (like `io.sockets` for all connected users), and then call the `.emit(...)` method. The first parameter is the name of the message, and any subsequent parameters are sent as function arguments:
 
     // send to one user
-    var socket = ...; // obtained through some trickery
+    var socket = ...; // obtained through some trickery, you'll see later
     socket.emit('myCoolEvent', param1, param2);
     
     // send to all users
@@ -113,7 +113,7 @@ This will be insufficient, however, because we actually want to keep track of us
 
   [socket.io-rooms]: https://github.com/LearnBoost/socket.io/wiki/Rooms
 
-What we'll do is create an event called "join" that a user will call immediately after joining a chatroom. We'll use this as an indication that the user should be joined into the room. Our new connection handler looks like this:
+What we'll do is create an event called "join" that a user will call immediately after joining a chatroom. We'll use this as an indication that the user should be added to the room. Our new connection handler looks like this:
 
     io.sockets.on('connection', function(socket){
         // clients emit this when they join new rooms
@@ -137,11 +137,11 @@ What we'll do is create an event called "join" that a user will call immediately
         
         // the client disconnected/closed their browser window
         socket.on('disconnect', function(){
-            // what might we need to do here? hmmmm
+            // Leave the room!
         });
     });
 
-**IMPORTANT NOTE:** this code exploits a very unique feature of JavaScript. Note that we just assign nicknames to socket objects, even though socket.io does not have a nickname property for sockets. This works, though, because objects in JavaScript are really just hash tables under-the-hood. The moral of the story is, you can assign any property to any object, anywhere, in JavaScript, and you can then go back and get that property later.
+**IMPORTANT NOTE:** this code exploits a very unique feature of JavaScript. Note that we just assign nicknames to socket objects, even though socket.io does not have a nickname property for sockets. This works, though, because objects in JavaScript are really just hash tables under the hood. The moral of the story is, you can assign any property to any object, anywhere, in JavaScript, and you can then go back and get that property later.
 
 On the client side, we might have something like this:
 
@@ -191,12 +191,12 @@ Finally, whenever someone leaves a room, joins a room, or changes their nickname
     // e.g.
     broadcastMembership('ABC123');
 
-There will undoubtedly be some remaining rough edges (when a new user joins, do they immediately see a list of other users in the room? do they see past messages?), but there isn't much more to it than that. **Make sure that you preserve your existing database code**, we still want messages to be logged as they're sent across the wire.
+There will undoubtedly be some remaining rough edges (when a new user joins, do they immediately see a list of other users in the room? do they see past messages?), but there isn't much more to it than that. **Make sure that you preserve your existing database code**, we still want messages to be stored.
 
 ## Other Niceties
-Any value you can add to your user experience is always good for brownie points. Think about what real-time features you can add with socket.io that would enhance your users' experience when chatting, and feel free to add them.
+Think about what real-time features you can add with socket.io that would enhance your users' experience when chatting, and feel free to add them.
 
-A few ideas that could be worth some extra credit:
+A few ideas:
 
 * Live typing notifications ("Justin is typing...") or potentially even live character sending. The latter would be tricky, both from an implementation standpoint, and from a user experience standpoint. If you do it, find a way to do it that isn't annoying!
 * Idle time detection and notification ("Justin is away"). You could track when the user switches windows/tabs with the `blur` event, and possibly track mouse events to see if they're on the window but not touching anything for awhile.
