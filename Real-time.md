@@ -132,7 +132,10 @@ What we'll do is create an event called "join" that a user will call immediately
             // process an incoming message
             // note that you somehow need to determine what room this is in
             // io.sockets.manager.roomClients[socket.id] may be of some help, or you
-            // could consider adding another custom property to the socket object
+            // could consider adding another custom property to the socket object.
+            // Note that io.sockets.manager.roomClients[socket.id] is a hash mapping
+            // from room name to true for all rooms that the socket is in, and that
+            // every socket is in a global room with name '' (the empty string).
         });
         
         // the client disconnected/closed their browser window
